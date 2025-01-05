@@ -48,6 +48,8 @@ func main() {
 	if pinLevel1.Read() == 1 {
 		// if dupa == 1 {
 		dane.Circles[3].Filled = true
+	} else {
+		dane.Circles[3].Filled = false
 	}
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
