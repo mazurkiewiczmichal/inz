@@ -81,12 +81,12 @@
         <div class="container">
             <p>Toggle the switches below:</p>
             <label class="switch">
-                <input type="checkbox" id="dupa" />
+                <input type="checkbox" id="pompSwitch" />
                 <span class="slider"></span>
             </label>
             <label class="switch">
                 <input
-                    type="checkbox"
+                    type="checkbox" id="valveSwitch"
                     checked
                     onclick="alert('Switch 2 toggled!')"
                 />
@@ -103,9 +103,18 @@
             </div>
         </div>
         <script>
-            dupa.onchange = (event) => {
+            pompSwitch.onchange = (event) => {
                 const checked = event.target.checked;
                 const url = checked ? "/on" : "/off";
+                fetch(url)
+                    .then((r) => r.text())
+                    .then((text) => {})
+                    .catch((e) => {});
+            };
+
+            valveSwitch.onchange = (event) => {
+                const checked = event.target.checked;
+                const url = checked ? "/on1" : "/off1";
                 fetch(url)
                     .then((r) => r.text())
                     .then((text) => {})
