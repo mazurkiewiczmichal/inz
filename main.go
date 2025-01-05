@@ -10,6 +10,16 @@ import (
 	"github.com/stianeikeland/go-rpio/v4"
 )
 
+// Definicja upgradera WebSocket
+var upgrader = websocket.Upgrader{
+	ReadBufferSize:  1024,
+	WriteBufferSize: 1024,
+	CheckOrigin: func(r *http.Request) bool {
+		// Zezwala na połączenia z dowolnego źródła
+		return true
+	},
+}
+
 func main() {
 
 	err := rpio.Open()
