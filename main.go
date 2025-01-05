@@ -45,7 +45,7 @@ func main() {
 	}
 	// dupa := 1
 
-	if pinLevel1.Read == 1 {
+	if pinLevel1.Read() == 1 {
 		// if dupa == 1 {
 		dane.Circles[3].Filled = true
 	}
