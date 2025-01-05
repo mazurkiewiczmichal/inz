@@ -21,6 +21,7 @@ func main() {
 
 	pinLevel1 := rpio.Pin(2)
 	pinLevel1.Input()
+	pinLevel1.PullDown()
 
 	tmpl, err := template.ParseFiles("strona.template")
 	if err != nil {
