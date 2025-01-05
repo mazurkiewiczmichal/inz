@@ -1,24 +1,11 @@
 package main
 
 import (
+	"html/template"
 	"net/http"
 
-	"fmt"
-	"time"
-
-	"github.com/gorilla/websocket"
 	"github.com/stianeikeland/go-rpio/v4"
 )
-
-// Definicja upgradera WebSocket
-var upgrader = websocket.Upgrader{
-	ReadBufferSize:  1024,
-	WriteBufferSize: 1024,
-	CheckOrigin: func(r *http.Request) bool {
-		// Zezwala na połączenia z dowolnego źródła
-		return true
-	},
-}
 
 func main() {
 
@@ -35,28 +22,37 @@ func main() {
 	pinLevel1 := rpio.Pin(2)
 	pinLevel1.Input()
 
-	// Handler dla WebSocket
-	http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
-		conn, err := upgrader.Upgrade(w, r, nil)
-		if err != nil {
-			fmt.Printf("Błąd upgradera WebSocket: %s\n", err)
-			return
-		}
-		defer conn.Close()
+	tmpl, err := template.ParseFiles("strona.template")
+	if err != nil {
+		panic(err)
+	}
 
-		for {
-			// Sprawdź stan pinu
-			if pinLevel1.Read() == rpio.High {
-				conn.WriteMessage(websocket.TextMessage, []byte("onLevel1"))
-			} else {
-				conn.WriteMessage(websocket.TextMessage, []byte("offLevel1"))
-			}
-			time.Sleep(100 * time.Millisecond)
-		}
-	})
+	dane := data{
+		Circles: []Circle{
+			{
+				Filled: false,
+			},
+			{
+				Filled: false,
+			},
+			{
+				Filled: false,
+			},
+			{
+				Filled: false,
+			},
+		},
+	}
+	// dupa := 1
+
+	if pinLevel1.Read == 1 {
+		// if dupa == 1 {
+		dane.Circles[3].Filled = true
+	}
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		http.ServeFile(w, r, "strona.html")
+		tmpl.Execute(w, dane)
+
 	})
 
 	http.HandleFunc("/on", func(w http.ResponseWriter, r *http.Request) {
@@ -80,4 +76,12 @@ func main() {
 		panic(err)
 	}
 
+}
+
+type data struct {
+	Circles []Circle
+}
+
+type Circle struct {
+	Filled bool
 }
