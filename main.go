@@ -47,40 +47,55 @@ func main() {
 				Filled: false,
 			},
 		},
-		PumpSwitchID:      "dupsko",
-		PumpSwitchChecked: false,
+		PumpSwitchID:       "pumpSwitch",
+		PumpSwitchChecked:  false,
+		ValveSwitchID:      "valveSwitch",
+		ValveSwitchChecked: false,
 	}
 
 	// dupa := 1
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 
+		//skorygowanie stanu switcha od zaworu przed zaladowaniem strony
+		if pinValeve.Read() == rpio.High {
+			dane.ValveSwitchChecked = true
+		} else {
+			dane.ValveSwitchChecked = false
+		}
+
+		//skorygowanie stanu switcha od pompy przed zaladowaniem strony
+		if pinPomp.Read() == rpio.High {
+			dane.PumpSwitchChecked = true
+		} else {
+			dane.PumpSwitchChecked = false
+		}
 		//sprawdzam stan inputow i wypelniam kolka na stronie
-		// if pinLevel1.Read() == rpio.High {
-		// 	// if pinPomp.Read() == 1 {
-		// 	dane.Circles[3].Filled = true
-		// } else {
-		// 	dane.Circles[3].Filled = false
-		// }
+		if pinLevel1.Read() == rpio.High {
+			// if pinPomp.Read() == 1 {
+			dane.Circles[3].Filled = true
+		} else {
+			dane.Circles[3].Filled = false
+		}
 		tmpl.Execute(w, dane)
 
 	})
 
-	// http.HandleFunc("/on", func(w http.ResponseWriter, r *http.Request) {
-	// 	pinPomp.High()
-	// })
+	http.HandleFunc("/on", func(w http.ResponseWriter, r *http.Request) {
+		pinPomp.High()
+	})
 
-	// http.HandleFunc("/off", func(w http.ResponseWriter, r *http.Request) {
-	// 	pinPomp.Low()
-	// })
+	http.HandleFunc("/off", func(w http.ResponseWriter, r *http.Request) {
+		pinPomp.Low()
+	})
 
-	// http.HandleFunc("/on1", func(w http.ResponseWriter, r *http.Request) {
-	// 	pinValeve.High()
-	// })
+	http.HandleFunc("/on1", func(w http.ResponseWriter, r *http.Request) {
+		pinValeve.High()
+	})
 
-	// http.HandleFunc("/off1", func(w http.ResponseWriter, r *http.Request) {
-	// 	pinValeve.Low()
-	// })
+	http.HandleFunc("/off1", func(w http.ResponseWriter, r *http.Request) {
+		pinValeve.Low()
+	})
 
 	err = http.ListenAndServe(":2137", nil)
 	if err != nil {
@@ -90,9 +105,11 @@ func main() {
 }
 
 type data struct {
-	Circles           []Circle
-	PumpSwitchID      template.JS
-	PumpSwitchChecked bool
+	Circles            []Circle
+	PumpSwitchID       template.JS
+	PumpSwitchChecked  bool
+	ValveSwitchID      template.JS
+	ValveSwitchChecked bool
 }
 
 type Circle struct {
