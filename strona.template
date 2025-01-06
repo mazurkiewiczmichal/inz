@@ -119,7 +119,7 @@
                     .catch((e) => {});
             };
 
-            {{ValveSwitchID}}.onchange = (event) => {
+            {{.ValveSwitchID}}.onchange = (event) => {
                 const checked = event.target.checked;
                 const url = checked ? "/on1" : "/off1";
                 fetch(url)
