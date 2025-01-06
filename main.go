@@ -19,9 +19,9 @@ func main() {
 	pinValeve := rpio.Pin(22)
 	pinValeve.Output()
 
-	pinLevel1 := rpio.Pin(2)
+	pinLevel1 := rpio.Pin(4)
 	pinLevel1.Input()
-	pinLevel1.PullDown()
+	pinLevel1.PullUp()
 
 	tmpl, err := template.ParseFiles("strona.template")
 	if err != nil {
@@ -46,14 +46,13 @@ func main() {
 	}
 	// dupa := 1
 
-	// if pinLevel1.Read() == rpio.High {
-	if pinPomp.Read() == 1 {
-		dane.Circles[3].Filled = true
-	} else {
-		dane.Circles[3].Filled = false
-	}
-
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		if pinLevel1.Read() == rpio.High {
+			// if pinPomp.Read() == 1 {
+			dane.Circles[3].Filled = true
+		} else {
+			dane.Circles[3].Filled = false
+		}
 		tmpl.Execute(w, dane)
 
 	})
