@@ -28,6 +28,17 @@ func main() {
 		panic(err)
 	}
 
+	dane1 := data1{
+		Switches: []Switch{
+			{
+				Checked: false,
+			},
+			{
+				Checked: false,
+			},
+		},
+	}
+
 	dane := data{
 		Circles: []Circle{
 			{
@@ -47,6 +58,16 @@ func main() {
 	// dupa := 1
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+
+		//sprawdzam stan switchow przed zaladowaniem strony i ustawiam switch na odpowiedni
+		if pinPomp.Read() == rpio.High {
+			dane1.Switches[0].Checked = true
+		} else {
+			dane1.Switches[0].Checked = false
+		}
+		tmpl.Execute(w, dane1)
+
+		//sprawdzam stan inputow i wypelniam kolka na stronie
 		if pinLevel1.Read() == rpio.High {
 			// if pinPomp.Read() == 1 {
 			dane.Circles[3].Filled = true
@@ -86,4 +107,12 @@ type data struct {
 
 type Circle struct {
 	Filled bool
+}
+
+type data1 struct {
+	Switches []Switch
+}
+
+type Switch struct {
+	Checked bool
 }

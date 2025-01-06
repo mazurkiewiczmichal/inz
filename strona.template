@@ -81,7 +81,13 @@
         <div class="container">
             <p>Toggle the switches below:</p>
             <label class="switch">
-                <input type="checkbox" id="pompSwitch" checked/>
+                <input type="checkbox" id="pompSwitch"
+                {{ range .Switches }}
+                    {{ if .Checked }}
+                        <div>checked</div>
+                    {{ end }}
+                {{ end }}
+                />
                 
                 <span class="slider"></span>
             </label>
