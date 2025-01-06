@@ -81,12 +81,12 @@
         <div class="container">
             <p>Toggle the switches below:</p>
             <label class="switch">
-                <input type="checkbox" id="pompSwitch"
-                {{ range .Switches }}
-                    {{ if .Checked }}
-                        <div>checked</div>
-                    {{ end }}
-                {{ end }}
+                <input type="checkbox" id="{{.PumpSwitchID}}"
+                {{if .PumpSwitchChecked}}
+                    checked
+                {{end}}
+                
+                
                 />
                 
                 <span class="slider"></span>
@@ -110,7 +110,7 @@
             </div>
         </div>
         <script>
-            pompSwitch.onchange = (event) => {
+            {{.PumpSwitchID}}.onchange = (event) => {
                 const checked = event.target.checked;
                 const url = checked ? "/on" : "/off";
                 fetch(url)
