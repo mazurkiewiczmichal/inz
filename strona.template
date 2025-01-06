@@ -126,6 +126,9 @@
                     .then((r) => r.text())
                     .then((text) => {})
                     .catch((e) => {});
+                    setInterval(() => {
+            window.location.reload();
+        }, 50);
             };
         </script>
     </body>
