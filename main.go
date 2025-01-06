@@ -46,8 +46,8 @@ func main() {
 	}
 	// dupa := 1
 
-	if pinLevel1.Read() == rpio.High {
-		// if dupa == 1 {
+	// if pinLevel1.Read() == rpio.High {
+	if pinPomp.Read() == 1 {
 		dane.Circles[3].Filled = true
 	} else {
 		dane.Circles[3].Filled = false
