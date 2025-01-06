@@ -81,7 +81,8 @@
         <div class="container">
             <p>Toggle the switches below:</p>
             <label class="switch">
-                <input type="checkbox" id="pompSwitch" />
+                <input type="checkbox" id="pompSwitch" checked/>
+                
                 <span class="slider"></span>
             </label>
             <label class="switch">
