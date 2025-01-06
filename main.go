@@ -51,9 +51,6 @@ func main() {
 			{
 				Filled: false,
 			},
-			{
-				Filled: false,
-			},
 		},
 		PumpSwitchID:       "pumpSwitch",
 		PumpSwitchChecked:  false,
@@ -81,21 +78,21 @@ func main() {
 		//sprawdzam stan inputow i wypelniam kolka na stronie
 		if pinLevel1.Read() == rpio.High {
 			// if pinPomp.Read() == 1 {
-			dane.Circles[3].Filled = false
-		} else {
-			dane.Circles[3].Filled = true
-		}
-		if pinLevel2.Read() == rpio.High {
-			// if pinPomp.Read() == 1 {
 			dane.Circles[2].Filled = false
 		} else {
 			dane.Circles[2].Filled = true
 		}
-		if pinLevel3.Read() == rpio.High {
-			// if pinPomp.Read() == 1 {
+		if pinLevel2.Read() == rpio.High {
+
 			dane.Circles[1].Filled = false
 		} else {
 			dane.Circles[1].Filled = true
+		}
+		if pinLevel3.Read() == rpio.High {
+
+			dane.Circles[0].Filled = false
+		} else {
+			dane.Circles[0].Filled = true
 		}
 		tmpl.Execute(w, dane)
 
