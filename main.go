@@ -27,6 +27,14 @@ func main() {
 	pinLevel1.Input()
 	pinLevel1.PullUp()
 
+	pinLevel2 := rpio.Pin(17)
+	pinLevel2.Input()
+	pinLevel2.PullUp()
+
+	pinLevel3 := rpio.Pin(27)
+	pinLevel3.Input()
+	pinLevel3.PullUp()
+
 	tmpl, err := template.ParseFiles("strona.template")
 	if err != nil {
 		panic(err)
@@ -73,9 +81,21 @@ func main() {
 		//sprawdzam stan inputow i wypelniam kolka na stronie
 		if pinLevel1.Read() == rpio.High {
 			// if pinPomp.Read() == 1 {
-			dane.Circles[3].Filled = true
-		} else {
 			dane.Circles[3].Filled = false
+		} else {
+			dane.Circles[3].Filled = true
+		}
+		if pinLevel2.Read() == rpio.High {
+			// if pinPomp.Read() == 1 {
+			dane.Circles[2].Filled = false
+		} else {
+			dane.Circles[2].Filled = true
+		}
+		if pinLevel3.Read() == rpio.High {
+			// if pinPomp.Read() == 1 {
+			dane.Circles[1].Filled = false
+		} else {
+			dane.Circles[1].Filled = true
 		}
 		tmpl.Execute(w, dane)
 
