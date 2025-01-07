@@ -59,6 +59,20 @@
             input:checked + .slider:before {
                 transform: translateX(26px);
             }
+            .hidden {
+                display: none;
+            }
+            .scheduler {
+                text-align: left;
+                margin: 20px auto;
+            }
+            .scheduler label {
+                display: block;
+                margin: 5px 0;
+            }
+            .scheduler p {
+                margin: 10px 0;
+            }
             .circles {
                 margin-top: 20px;
             }
@@ -74,16 +88,17 @@
             .circle.filled {
                 background-color: #007bff;
             }
-            .hidden {
-                display: none;
+            button {
+                padding: 10px 20px;
+                font-size: 16px;
+                color: #fff;
+                background-color: #007bff;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
             }
-            .scheduler {
-                text-align: left;
-                margin: 20px auto;
-            }
-            .scheduler label {
-                display: block;
-                margin: 5px 0;
+            button:hover {
+                background-color: #0056b3;
             }
         </style>
     </head>
@@ -101,21 +116,11 @@
             <div id="manualMode">
                 <p>Toggle the switches below:</p>
                 <label class="switch">
-                    <input 
-                        type="checkbox" id="pumpSwitch"
-                        {{if .PumpSwitchChecked}}
-                            checked
-                        {{end}}
-                    />
+                    <input type="checkbox" id="pumpSwitch" />
                     <span class="slider"></span>
                 </label>
                 <label class="switch">
-                    <input
-                        type="checkbox" id="valveSwitch"
-                        {{if .ValveSwitchChecked}}
-                            checked
-                        {{end}}
-                    />
+                    <input type="checkbox" id="valveSwitch" />
                     <span class="slider"></span>
                 </label>
                 <div class="circles">   
@@ -140,8 +145,20 @@
                     <label><input type="checkbox" value="Friday" /> Friday</label>
                     <label><input type="checkbox" value="Saturday" /> Saturday</label>
                     <label><input type="checkbox" value="Sunday" /> Sunday</label>
-                    <p>Select Time:</p>
-                    <input type="time" id="startTime" /> - <input type="time" id="endTime" />
+                    <p>
+                        <label for="endTime">End Time:</label>
+                        <input type="time" id="endTime" />
+                    </p>
+                    <div class="circles">   
+                        {{ range .Circles }}
+                            {{ if .Filled }}
+                                <div class="circle filled"></div>
+                            {{ else }}
+                                <div class="circle"></div>
+                            {{ end }}
+                        {{ end }}
+                    </div>
+                    <button id="confirmButton">Zatwierdź</button>
                 </div>
             </div>
         </div>
@@ -152,6 +169,7 @@
             const modeLabel = document.getElementById("modeLabel");
             const manualMode = document.getElementById("manualMode");
             const scheduleMode = document.getElementById("scheduleMode");
+            const confirmButton = document.getElementById("confirmButton");
 
             // Przełączanie trybów
             modeSwitch.onchange = (event) => {
@@ -171,36 +189,30 @@
             pumpSwitch.onchange = (event) => {
                 const checked = event.target.checked;
                 const url = checked ? "/on" : "/off";
-                fetch(url)
-                    .then((r) => r.text())
-                    .catch((e) => console.error(e));
+                fetch(url).catch((e) => console.error(e));
             };
 
             // Sterowanie zaworem w trybie manualnym
             valveSwitch.onchange = (event) => {
                 const checked = event.target.checked;
                 const url = checked ? "/on1" : "/off1";
-                fetch(url)
-                    .then((r) => r.text())
-                    .catch((e) => console.error(e));
+                fetch(url).catch((e) => console.error(e));
             };
 
             // Pobieranie danych harmonogramu
             const getScheduleData = () => {
                 const days = Array.from(document.querySelectorAll(".scheduler input[type='checkbox']:checked"))
                     .map((checkbox) => checkbox.value);
-                const startTime = document.getElementById("startTime").value;
                 const endTime = document.getElementById("endTime").value;
 
                 return {
                     days,
-                    startTime,
                     endTime,
                 };
             };
 
-            // Wysyłanie harmonogramu na serwer
-            document.getElementById("scheduleMode").onchange = () => {
+            // Obsługa przycisku "Zatwierdź"
+            confirmButton.onclick = () => {
                 const scheduleData = getScheduleData();
                 console.log(scheduleData); // Możesz wysłać dane na serwer:
                 // fetch("/schedule", {
@@ -208,7 +220,9 @@
                 //     headers: { "Content-Type": "application/json" },
                 //     body: JSON.stringify(scheduleData),
                 // });
+                alert("Schedule saved!");
             };
         </script>
     </body>
 </html>
+
