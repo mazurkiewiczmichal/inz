@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Switches Example</title>
+        <title>Switches with Modes</title>
         <style>
             body {
                 font-family: Arial, sans-serif;
@@ -15,7 +15,7 @@
                 margin: 50px auto;
                 padding: 20px;
                 border: 2px solid #333;
-                width: 300px;
+                width: 400px;
                 border-radius: 10px;
                 background-color: #fff;
             }
@@ -59,77 +59,144 @@
             input:checked + .slider:before {
                 transform: translateX(26px);
             }
-            .circles {
-                margin-top: 20px;
+            .hidden {
+                display: none;
             }
-            .circle {
+            .scheduler {
+                text-align: left;
+                margin: 20px auto;
+            }
+            .scheduler label {
                 display: block;
-                width: 20px;
-                height: 20px;
-                margin: 10px auto;
-                border: 2px solid #333;
-                border-radius: 50%;
-                background-color: transparent;
+                margin: 5px 0;
             }
-            .circle.filled {
+            .scheduler p {
+                margin: 10px 0;
+            }
+            button {
+                padding: 10px 20px;
+                font-size: 16px;
+                color: #fff;
                 background-color: #007bff;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+            button:hover {
+                background-color: #0056b3;
             }
         </style>
     </head>
     <body>
-        <h1>Interactive Switches</h1>
+        <h1>Switch Modes</h1>
         <div class="container">
-            <p>Toggle the switches below:</p>
+            <p>Select Mode:</p>
             <label class="switch">
-                <input 
-                    type="checkbox" id="{{.PumpSwitchID}}"
-                    {{if .PumpSwitchChecked}}
-                        checked
-                    {{end}}
-                />
-                
+                <input type="checkbox" id="modeSwitch" />
                 <span class="slider"></span>
             </label>
-            <label class="switch">
-                <input
-                    type="checkbox" id="{{.ValveSwitchID}}"
-                    {{if .ValveSwitchChecked}}
-                        checked
-                    {{end}}
-                />
-                <span class="slider"></span>
-            </label>
-            <div class="circles">   
-                {{ range .Circles }}
-                    {{ if .Filled }}
-                        <div class="circle filled"></div>
-                    {{ else }}
-                        <div class="circle"></div>
-                    {{ end }}
-                {{ end }}
+            <p id="modeLabel">Manual Mode</p>
+
+            <!-- Manual Mode -->
+            <div id="manualMode">
+                <p>Toggle the switches below:</p>
+                <label class="switch">
+                    <input type="checkbox" id="pumpSwitch" />
+                    <span class="slider"></span>
+                </label>
+                <label class="switch">
+                    <input type="checkbox" id="valveSwitch" />
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <!-- Scheduler Mode -->
+            <div id="scheduleMode" class="hidden">
+                <div class="scheduler">
+                    <h3>Scheduler</h3>
+                    <label><input type="checkbox" value="Monday" /> Monday</label>
+                    <label><input type="checkbox" value="Tuesday" /> Tuesday</label>
+                    <label><input type="checkbox" value="Wednesday" /> Wednesday</label>
+                    <label><input type="checkbox" value="Thursday" /> Thursday</label>
+                    <label><input type="checkbox" value="Friday" /> Friday</label>
+                    <label><input type="checkbox" value="Saturday" /> Saturday</label>
+                    <label><input type="checkbox" value="Sunday" /> Sunday</label>
+                    <p>Set Time:</p>
+                    <p>
+                        <label for="startTime">Start Time (Filling):</label>
+                        <input type="time" id="startTime" />
+                    </p>
+                    <p>
+                        <label for="endTime">End Time (Watering):</label>
+                        <input type="time" id="endTime" />
+                    </p>
+                    <button id="confirmButton">Zatwierdź</button>
+                </div>
             </div>
         </div>
+
         <script>
-            {{.PumpSwitchID}}.onchange = (event) => {
-                const checked = event.target.checked;
-                const url = checked ? "/on" : "/off";
-                fetch(url)
-                    .then((r) => r.text())
-                    .then((text) => {})
-                    .catch((e) => {});
+            // Elementy HTML
+            const modeSwitch = document.getElementById("modeSwitch");
+            const modeLabel = document.getElementById("modeLabel");
+            const manualMode = document.getElementById("manualMode");
+            const scheduleMode = document.getElementById("scheduleMode");
+            const confirmButton = document.getElementById("confirmButton");
+
+            // Przełączanie trybów
+            modeSwitch.onchange = (event) => {
+                const isScheduleMode = event.target.checked;
+                if (isScheduleMode) {
+                    modeLabel.innerText = "Schedule Mode";
+                    manualMode.classList.add("hidden");
+                    scheduleMode.classList.remove("hidden");
+                } else {
+                    modeLabel.innerText = "Manual Mode";
+                    scheduleMode.classList.add("hidden");
+                    manualMode.classList.remove("hidden");
+                }
             };
 
-            {{.ValveSwitchID}}.onchange = (event) => {
+            // Sterowanie pompą w trybie manualnym
+            pumpSwitch.onchange = (event) => {
+                const checked = event.target.checked;
+                const url = checked ? "/on" : "/off";
+                fetch(url).catch((e) => console.error(e));
+            };
+
+            // Sterowanie zaworem w trybie manualnym
+            valveSwitch.onchange = (event) => {
                 const checked = event.target.checked;
                 const url = checked ? "/on1" : "/off1";
-                fetch(url)
-                    .then((r) => r.text())
-                    .then((text) => {})
-                    .catch((e) => {});
+                fetch(url).catch((e) => console.error(e));
             };
-            setInterval(() => {
-            window.location.reload();
-        }, 5000);
+
+            // Pobieranie danych harmonogramu
+            const getScheduleData = () => {
+                const days = Array.from(document.querySelectorAll(".scheduler input[type='checkbox']:checked"))
+                    .map((checkbox) => checkbox.value);
+                const startTime = document.getElementById("startTime").value;
+                const endTime = document.getElementById("endTime").value;
+
+                return {
+                    days,
+                    startTime,
+                    endTime,
+                };
+            };
+
+            // Obsługa przycisku "Zatwierdź"
+            confirmButton.onclick = () => {
+                const scheduleData = getScheduleData();
+                console.log(scheduleData); // Możesz wysłać dane na serwer:
+                // fetch("/schedule", {
+                //     method: "POST",
+                //     headers: { "Content-Type": "application/json" },
+                //     body: JSON.stringify(scheduleData),
+                // });
+                alert("Schedule saved!");
+            };
         </script>
     </body>
 </html>
+
