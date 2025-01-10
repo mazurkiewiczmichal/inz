@@ -100,6 +100,14 @@
             button:hover {
                 background-color: #0056b3;
             }
+            .soil-moisture {
+                margin: 20px 0;
+                padding: 10px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                background-color: #f1f1f1;
+                font-size: 16px;
+            }
         </style>
     </head>
     <body>
@@ -123,6 +131,9 @@
                     <input type="checkbox" id="valveSwitch" />
                     <span class="slider"></span>
                 </label>
+                <div class="soil-moisture" id="manualSoilMoisture">
+                    Soil Moisture: <span id="manualMoistureValue">Loading...</span>
+                </div>
                 <div class="circles">   
                     {{ range .Circles }}
                         {{ if .Filled }}
@@ -149,6 +160,9 @@
                         <label for="endTime">End Time:</label>
                         <input type="time" id="endTime" />
                     </p>
+                    <div class="soil-moisture" id="scheduleSoilMoisture">
+                        Soil Moisture: <span id="scheduleMoistureValue">Loading...</span>
+                    </div>
                     <div class="circles">   
                         {{ range .Circles }}
                             {{ if .Filled }}
@@ -170,6 +184,8 @@
             const manualMode = document.getElementById("manualMode");
             const scheduleMode = document.getElementById("scheduleMode");
             const confirmButton = document.getElementById("confirmButton");
+            const manualMoistureValue = document.getElementById("manualMoistureValue");
+            const scheduleMoistureValue = document.getElementById("scheduleMoistureValue");
 
             // Przełączanie trybów
             modeSwitch.onchange = (event) => {
@@ -199,6 +215,20 @@
                 fetch(url).catch((e) => console.error(e));
             };
 
+            // Pobieranie danych wilgotności gleby
+            const fetchSoilMoisture = () => {
+                fetch("/soil-moisture")
+                    .then((response) => response.json())
+                    .then((data) => {
+                        manualMoistureValue.textContent = `${data.moisture}%`;
+                        scheduleMoistureValue.textContent = `${data.moisture}%`;
+                    })
+                    .catch((e) => console.error("Error fetching soil moisture:", e));
+            };
+
+            // Pobranie danych przy ładowaniu strony
+            window.onload = fetchSoilMoisture;
+
             // Pobieranie danych harmonogramu
             const getScheduleData = () => {
                 const days = Array.from(document.querySelectorAll(".scheduler input[type='checkbox']:checked"))
@@ -225,4 +255,3 @@
         </script>
     </body>
 </html>
-
