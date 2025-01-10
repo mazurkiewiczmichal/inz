@@ -108,6 +108,22 @@
                 background-color: #f1f1f1;
                 font-size: 16px;
             }
+            .water-indicator {
+                margin-top: 20px;
+                text-align: center;
+            }
+            .water-indicator .circle {
+                display: block;
+                width: 30px;
+                height: 30px;
+                margin: 10px auto;
+                border: 2px solid #333;
+                border-radius: 50%;
+                background-color: transparent;
+            }
+            .water-indicator .circle.filled {
+                background-color: #007bff;
+            }
         </style>
     </head>
     <body>
@@ -175,6 +191,12 @@
                     <button id="confirmButton">Zatwierdź</button>
                 </div>
             </div>
+
+            <!-- Water Indicator -->
+            <div class="water-indicator">
+                <p>Watering Status</p>
+                <div class="circle" id="waterCircle"></div>
+            </div>
         </div>
 
         <script>
@@ -186,6 +208,7 @@
             const confirmButton = document.getElementById("confirmButton");
             const manualMoistureValue = document.getElementById("manualMoistureValue");
             const scheduleMoistureValue = document.getElementById("scheduleMoistureValue");
+            const waterCircle = document.getElementById("waterCircle");
 
             // Przełączanie trybów
             modeSwitch.onchange = (event) => {
@@ -227,7 +250,24 @@
             };
 
             // Pobranie danych przy ładowaniu strony
-            window.onload = fetchSoilMoisture;
+            window.onload = () => {
+                fetchSoilMoisture();
+                updateWateringStatus();
+            };
+
+            // Aktualizacja stanu podlewania
+            const updateWateringStatus = () => {
+                fetch("/watering-status")
+                    .then((response) => response.json())
+                    .then((data) => {
+                        if (data.watering) {
+                            waterCircle.classList.add("filled");
+                        } else {
+                            waterCircle.classList.remove("filled");
+                        }
+                    })
+                    .catch((e) => console.error("Error fetching watering status:", e));
+            };
 
             // Pobieranie danych harmonogramu
             const getScheduleData = () => {
