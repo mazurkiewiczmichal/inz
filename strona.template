@@ -143,10 +143,12 @@
                     <input type="checkbox" id="pumpSwitch" />
                     <span class="slider"></span>
                 </label>
+                <p>Włącznik pompy</p>
                 <label class="switch">
                     <input type="checkbox" id="valveSwitch" />
                     <span class="slider"></span>
                 </label>
+                <p>Włącznik zaworu</p>
                 <div class="soil-moisture" id="manualSoilMoisture">
                     Soil Moisture: <span id="manualMoistureValue">Loading...</span>
                 </div>
@@ -179,23 +181,12 @@
                     <div class="soil-moisture" id="scheduleSoilMoisture">
                         Soil Moisture: <span id="scheduleMoistureValue">Loading...</span>
                     </div>
-                    <div class="circles">   
-                        {{ range .Circles }}
-                            {{ if .Filled }}
-                                <div class="circle filled"></div>
-                            {{ else }}
-                                <div class="circle"></div>
-                            {{ end }}
-                        {{ end }}
+                    <div class="water-indicator">
+                        <p>Watering Status</p>
+                        <div class="circle" id="waterCircle"></div>
                     </div>
                     <button id="confirmButton">Zatwierdź</button>
                 </div>
-            </div>
-
-            <!-- Water Indicator -->
-            <div class="water-indicator">
-                <p>Watering Status</p>
-                <div class="circle" id="waterCircle"></div>
             </div>
         </div>
 

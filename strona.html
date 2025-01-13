@@ -100,6 +100,30 @@
             button:hover {
                 background-color: #0056b3;
             }
+            .soil-moisture {
+                margin: 20px 0;
+                padding: 10px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                background-color: #f1f1f1;
+                font-size: 16px;
+            }
+            .water-indicator {
+                margin-top: 20px;
+                text-align: center;
+            }
+            .water-indicator .circle {
+                display: block;
+                width: 30px;
+                height: 30px;
+                margin: 10px auto;
+                border: 2px solid #333;
+                border-radius: 50%;
+                background-color: transparent;
+            }
+            .water-indicator .circle.filled {
+                background-color: #007bff;
+            }
         </style>
     </head>
     <body>
@@ -123,6 +147,9 @@
                     <input type="checkbox" id="valveSwitch" />
                     <span class="slider"></span>
                 </label>
+                <div class="soil-moisture" id="manualSoilMoisture">
+                    Soil Moisture: <span id="manualMoistureValue">Loading...</span>
+                </div>
                 <div class="circles">   
                     {{ range .Circles }}
                         {{ if .Filled }}
@@ -149,6 +176,9 @@
                         <label for="endTime">End Time:</label>
                         <input type="time" id="endTime" />
                     </p>
+                    <div class="soil-moisture" id="scheduleSoilMoisture">
+                        Soil Moisture: <span id="scheduleMoistureValue">Loading...</span>
+                    </div>
                     <div class="circles">   
                         {{ range .Circles }}
                             {{ if .Filled }}
@@ -161,6 +191,12 @@
                     <button id="confirmButton">Zatwierdź</button>
                 </div>
             </div>
+
+            <!-- Water Indicator -->
+            <div class="water-indicator">
+                <p>Watering Status</p>
+                <div class="circle" id="waterCircle"></div>
+            </div>
         </div>
 
         <script>
@@ -170,6 +206,9 @@
             const manualMode = document.getElementById("manualMode");
             const scheduleMode = document.getElementById("scheduleMode");
             const confirmButton = document.getElementById("confirmButton");
+            const manualMoistureValue = document.getElementById("manualMoistureValue");
+            const scheduleMoistureValue = document.getElementById("scheduleMoistureValue");
+            const waterCircle = document.getElementById("waterCircle");
 
             // Przełączanie trybów
             modeSwitch.onchange = (event) => {
@@ -197,6 +236,37 @@
                 const checked = event.target.checked;
                 const url = checked ? "/on1" : "/off1";
                 fetch(url).catch((e) => console.error(e));
+            };
+
+            // Pobieranie danych wilgotności gleby
+            const fetchSoilMoisture = () => {
+                fetch("/soil-moisture")
+                    .then((response) => response.json())
+                    .then((data) => {
+                        manualMoistureValue.textContent = `${data.moisture}%`;
+                        scheduleMoistureValue.textContent = `${data.moisture}%`;
+                    })
+                    .catch((e) => console.error("Error fetching soil moisture:", e));
+            };
+
+            // Pobranie danych przy ładowaniu strony
+            window.onload = () => {
+                fetchSoilMoisture();
+                updateWateringStatus();
+            };
+
+            // Aktualizacja stanu podlewania
+            const updateWateringStatus = () => {
+                fetch("/watering-status")
+                    .then((response) => response.json())
+                    .then((data) => {
+                        if (data.watering) {
+                            waterCircle.classList.add("filled");
+                        } else {
+                            waterCircle.classList.remove("filled");
+                        }
+                    })
+                    .catch((e) => console.error("Error fetching watering status:", e));
             };
 
             // Pobieranie danych harmonogramu
