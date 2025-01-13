@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="pl">
+<html lang="en">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -124,6 +124,11 @@
             .water-indicator .circle.filled {
                 background-color: #007bff;
             }
+            #modeLabel {
+                font-size: 24px;
+                color: #007bff;
+                font-weight: bold;
+            }
         </style>
     </head>
     <body>
@@ -165,7 +170,6 @@
             <!-- Scheduler Mode -->
             <div id="scheduleMode" class="hidden">
                 <div class="scheduler">
-                    
                     <label><input type="checkbox" value="Poniedziałek" /> Poniedziałek</label>
                     <label><input type="checkbox" value="Wtorek" /> Wtorek</label>
                     <label><input type="checkbox" value="Środa" /> Środa</label>
@@ -178,7 +182,7 @@
                         <input type="time" id="endTime" />
                     </p>
                     <div class="soil-moisture" id="scheduleSoilMoisture">
-                        Wilgotność: <span id="scheduleMoistureValue">63%</span>
+                        Wilgotność: <span id="scheduleMoistureValue">Loading...</span>
                     </div>
                     <div class="water-indicator">
                         <p>Nalewanie</p>
@@ -280,7 +284,7 @@
                 //     headers: { "Content-Type": "application/json" },
                 //     body: JSON.stringify(scheduleData),
                 // });
-                alert("Zapisano harmonogram");
+                alert("Schedule saved!");
             };
         </script>
     </body>
