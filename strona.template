@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="pl">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -178,7 +178,7 @@
                         <input type="time" id="endTime" />
                     </p>
                     <div class="soil-moisture" id="scheduleSoilMoisture">
-                        Wilgotność: <span id="scheduleMoistureValue">Loading...</span>
+                        Wilgotność: <span id="scheduleMoistureValue">63%</span>
                     </div>
                     <div class="water-indicator">
                         <p>Nalewanie</p>
@@ -280,7 +280,7 @@
                 //     headers: { "Content-Type": "application/json" },
                 //     body: JSON.stringify(scheduleData),
                 // });
-                alert("Schedule saved!");
+                alert("Zapisano harmonogram");
             };
         </script>
     </body>
