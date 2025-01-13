@@ -165,14 +165,14 @@
             <!-- Scheduler Mode -->
             <div id="scheduleMode" class="hidden">
                 <div class="scheduler">
-                    <h3>Tryb harmonogramu</h3>
-                    <label><input type="checkbox" value="Monday" /> Monday</label>
-                    <label><input type="checkbox" value="Tuesday" /> Tuesday</label>
-                    <label><input type="checkbox" value="Wednesday" /> Wednesday</label>
-                    <label><input type="checkbox" value="Thursday" /> Thursday</label>
-                    <label><input type="checkbox" value="Friday" /> Friday</label>
-                    <label><input type="checkbox" value="Saturday" /> Saturday</label>
-                    <label><input type="checkbox" value="Sunday" /> Sunday</label>
+                    
+                    <label><input type="checkbox" value="Poniedziałek" /> Poniedziałek</label>
+                    <label><input type="checkbox" value="Wtorek" /> Wtorek</label>
+                    <label><input type="checkbox" value="Środa" /> Środa</label>
+                    <label><input type="checkbox" value="Czwartek" /> Czwartek</label>
+                    <label><input type="checkbox" value="Piątek" /> Piątek</label>
+                    <label><input type="checkbox" value="Sobota" /> Sobota</label>
+                    <label><input type="checkbox" value="Niedziela" /> Niedziela</label>
                     <p>
                         <label for="endTime">Godzina podlewania:</label>
                         <input type="time" id="endTime" />
