@@ -182,7 +182,7 @@
                         <input type="time" id="endTime" />
                     </p>
                     <div class="soil-moisture" id="scheduleSoilMoisture">
-                        Wilgotność: <span id="scheduleMoistureValue">Loading...</span>
+                        Wilgotność: <span id="scheduleMoistureValue">63%</span>
                     </div>
                     <div class="water-indicator">
                         <p>Nalewanie</p>
