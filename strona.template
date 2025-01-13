@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Switches with Modes</title>
+        <title>Zdalne Podlewanie</title>
         <style>
             body {
                 font-family: Arial, sans-serif;
@@ -127,18 +127,17 @@
         </style>
     </head>
     <body>
-        <h1>Switch Modes</h1>
+        <h1>Zdalne Podlewanie</h1>
         <div class="container">
-            <p>Select Mode:</p>
+            <p>Tryb pracy:</p>
             <label class="switch">
                 <input type="checkbox" id="modeSwitch" />
                 <span class="slider"></span>
             </label>
-            <p id="modeLabel">Manual Mode</p>
+            <p id="modeLabel">Sterowanie ręczne</p>
 
             <!-- Manual Mode -->
             <div id="manualMode">
-                <p>Toggle the switches below:</p>
                 <label class="switch">
                     <input type="checkbox" id="pumpSwitch" />
                     <span class="slider"></span>
@@ -150,7 +149,7 @@
                 </label>
                 <p>Włącznik zaworu</p>
                 <div class="soil-moisture" id="manualSoilMoisture">
-                    Soil Moisture: <span id="manualMoistureValue">Loading...</span>
+                    Wilgotność: <span id="manualMoistureValue">63%</span>
                 </div>
                 <div class="circles">   
                     {{ range .Circles }}
@@ -166,7 +165,7 @@
             <!-- Scheduler Mode -->
             <div id="scheduleMode" class="hidden">
                 <div class="scheduler">
-                    <h3>Scheduler</h3>
+                    <h3>Tryb harmonogramu</h3>
                     <label><input type="checkbox" value="Monday" /> Monday</label>
                     <label><input type="checkbox" value="Tuesday" /> Tuesday</label>
                     <label><input type="checkbox" value="Wednesday" /> Wednesday</label>
@@ -175,14 +174,14 @@
                     <label><input type="checkbox" value="Saturday" /> Saturday</label>
                     <label><input type="checkbox" value="Sunday" /> Sunday</label>
                     <p>
-                        <label for="endTime">End Time:</label>
+                        <label for="endTime">Godzina podlewania:</label>
                         <input type="time" id="endTime" />
                     </p>
                     <div class="soil-moisture" id="scheduleSoilMoisture">
-                        Soil Moisture: <span id="scheduleMoistureValue">Loading...</span>
+                        Wilgotność: <span id="scheduleMoistureValue">Loading...</span>
                     </div>
                     <div class="water-indicator">
-                        <p>Watering Status</p>
+                        <p>Nalewanie</p>
                         <div class="circle" id="waterCircle"></div>
                     </div>
                     <button id="confirmButton">Zatwierdź</button>
@@ -205,11 +204,11 @@
             modeSwitch.onchange = (event) => {
                 const isScheduleMode = event.target.checked;
                 if (isScheduleMode) {
-                    modeLabel.innerText = "Schedule Mode";
+                    modeLabel.innerText = "Tryb harmonogramu";
                     manualMode.classList.add("hidden");
                     scheduleMode.classList.remove("hidden");
                 } else {
-                    modeLabel.innerText = "Manual Mode";
+                    modeLabel.innerText = "Sterowanie ręczne";
                     scheduleMode.classList.add("hidden");
                     manualMode.classList.remove("hidden");
                 }
